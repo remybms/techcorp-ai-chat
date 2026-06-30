@@ -1,0 +1,24 @@
+# Ignore datasets containing sensitive examples
+datasets/
+
+# Ignore local setup binaries
+*.exe
+OllamaSetup.exe
+
+# Ignore model weights and large artifacts
+models/
+*.safetensors
+*.ckpt
+*.pt
+*.bin
+
+# Node / editor / OS
+node_modules/
+.vscode/
+.DS_Store
+
+# Env files
+.env
+
+# Lockfiles (optional to ignore)
+package-lock.json
