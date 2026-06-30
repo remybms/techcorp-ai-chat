@@ -1,77 +1,80 @@
-# React + TypeScript + Vite
+# TechCorp — Assistant Financier IA
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Interface web de chat pour interagir en temps réel avec le modèle **Phi-3.5-Financial** via Ollama.
 
-Currently, two official plugins are available:
+## Prérequis
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- [Node.js](https://nodejs.org/) 18+
+- [Ollama](https://ollama.com/download) installé et le modèle `phi3-financial` disponible
 
-## React Compiler
-
-The React Compiler is enabled on this template. See [this documentation](https://react.dev/learn/react-compiler) for more information.
-
-Note: This will impact Vite dev & build performances.
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-
+Vérifier que le modèle est présent :
+```bash
+ollama list
+# doit afficher phi3-financial
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+Si absent, le créer depuis le Modelfile fourni par l'équipe INFRA :
+```bash
+ollama create phi3-financial -f ../ia/ollama_server/Modelfile
+```
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## Lancement
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+# Terminal 1 — démarrer le serveur Ollama
+ollama serve
+
+# Terminal 2 — démarrer l'interface
+cd rendu/devweb
+npm install
+npm run dev
+# → http://localhost:5173
+```
+
+## Architecture de l'intégration
 
 ```
+Navigateur (React)
+      │
+      │  /ollama/api/chat  (proxy Vite)
+      ▼
+Vite Dev Server :5173
+      │
+      │  http://localhost:11434/api/chat
+      ▼
+Ollama :11434
+      │
+      ▼
+phi3-financial (Phi-3.5-mini-instruct, spécialisé finance)
+```
+
+Le proxy Vite (`vite.config.ts`) redirige les requêtes `/ollama/*` vers `http://localhost:11434` pour éviter les erreurs CORS du navigateur.
+
+## Choix techniques
+
+| Choix | Justification |
+|---|---|
+| React 19 + TypeScript | Typage strict, composants réactifs |
+| Vite 8 | Démarrage instantané, HMR, proxy intégré |
+| `fetch` natif | Zéro dépendance externe pour les appels API |
+| `stream: false` | Réponse complète avant affichage, plus simple à gérer |
+| Proxy Vite | Évite CORS sans backend supplémentaire |
+
+## Structure du code
+
+```
+src/
+├── App.tsx          # Composant principal (état, UI, logique)
+├── App.css          # Styles (thème sombre, orange)
+├── index.css        # Styles globaux et layout
+└── api/
+    └── ollama.ts    # Service d'appel à l'API Ollama
+```
+
+## Fonctionnalités
+
+- Chat en temps réel avec le modèle Phi-3.5-Financial
+- Historique conversationnel transmis à chaque requête (contexte maintenu)
+- Indicateur de frappe animé pendant la génération
+- Gestion d'erreur si Ollama n'est pas joignable
+- Envoi par `Entrée`, saut de ligne par `Maj+Entrée`
