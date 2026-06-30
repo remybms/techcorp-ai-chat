@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect, FormEvent, KeyboardEvent } from "react";
+import { useState, useRef, useEffect, type FormEvent, type KeyboardEvent } from "react";
 import "./App.css";
 
 type Role = "user" | "assistant";
