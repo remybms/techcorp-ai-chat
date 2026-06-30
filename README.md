@@ -4,7 +4,7 @@ Travail réalisé par :
 - DELPORTE Théo
 - PINCEMIN Gabriel
 - ADAM ABKAR Najm Eldeen
-- CHAFFEAUX Kévin
+- CHAFFAUX Kévin
 - PIVETEAU Nathan
 - BAMAS LUNAY Rémy
 
