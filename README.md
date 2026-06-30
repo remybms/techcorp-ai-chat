@@ -1,5 +1,15 @@
 # TechCorp-AI-chat
 
+Travail réalisé par :
+- DELPORTE Théo
+- PINCEMIN Gabriel
+- ADAM ABKAR Najm Eldeen
+- CHAFFEAUX Kévin
+- PIVETEAU Nathan
+- BAMAS LUNAY Rémy
+
+---
+
 Le travail de l'équipe infra est sur la branche **groupe-infra-11**, dans le dossier rendu/infra
 
 Le travail de l'équipe data est sur la branche **groupe-data-11**, dans le dossier rendu/data
