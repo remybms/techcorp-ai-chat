@@ -1,2 +1,6 @@
 datasets/dataset_v0.json
+datasets/medical_dataset.json
+datasets/medical_dataset_clean.json
+models/phi35_medical_fused/model.safetensors
+node_modules/
 .DS_Store
